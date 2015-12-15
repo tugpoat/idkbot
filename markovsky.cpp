@@ -185,18 +185,21 @@ int Markovsky::LearnLine(string &line) {
   //loop through words contained in input, 
   int sz = curwords.size();
   for (int i = 0; i < sz; i++) {
-	map<string, word_t>::iterator wit = words.find(curwords[i]);
-  //if we've reached the last element, add the word to our brain
-	if (wit == words.end()) {
-	  word_t cword;
-	  context_t cxt(lineit, i);
-	  cword.push_back(cxt);
-	  words[curwords[i]] = cword;
-	} else {
-	  context_t cxt(lineit, i);
-	  ((*wit).second).push_back(cxt);
-	}
-	num_contexts++;
+    //search through our brain for the word we're trying to learn
+  	map<string, word_t>::iterator wit = words.find(curwords[i]);
+
+    //if we haven't learned the word yet, learn the new word and its associated context
+  	if (wit == words.end()) {
+  	  word_t cword;
+  	  context_t cxt(lineit, i);
+  	  cword.push_back(cxt);
+  	  words[curwords[i]] = cword;
+  	} else { 
+      //if we know the word, learn the new context
+  	  context_t cxt(lineit, i);
+  	  ((*wit).second).push_back(cxt);
+  	}
+  	num_contexts++;
   }
   
   return true;
